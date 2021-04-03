@@ -14,14 +14,14 @@ router.post("/", async (req, res) => {
     const checkUser = await pool.query(UsernameCheckQuery, [name]);
 
     if (checkUser.rowCount > 0) {
-      res.json({ error: "Username not available" });
+      res.status(409).json({ error: "Username not available" });
     } else {
       const hashedPw = await bcrypt.hash(password, saltRounds);
       const newUser = await pool.query(UserInsertQuery, [name, hashedPw]);
-      res.json({ username: newUser.rows[0].username });
+      res.status(201).json({ username: newUser.rows[0].username });
     }
   } catch (err) {
-    res.json({ error: err.message });
+    res.status(500).json({ error: err.message });
     console.error(err);
   }
 });
