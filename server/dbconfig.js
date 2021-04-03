@@ -8,4 +8,4 @@ const pool = new Pool({
     database: "Rebbit"
 });
 
-export default pool;
+module.exports = pool;
