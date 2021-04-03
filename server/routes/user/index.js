@@ -1,13 +1,20 @@
 const express = require("express");
+const pool = require("../../dbconfig");
 const router = express.Router();
 
-router.post("/", (req, res) => {
+const UserInsertQuery =
+  "INSERT INTO users (username, password) VALUES($1, $2) RETURNING *";
+
+router.post("/", async (req, res) => {
   try {
     const { name, password } = req.body;
-    console.log(name, password);
-    res.send("user POST route");
+    const newUser = await pool.query(UserInsertQuery, [name, password]);
+    res.json(newUser.rows[0]);
   } catch (err) {
-    console.err(err.message);
+    if (err.code == 23505) {
+      res.json({ error: "Username not available" });
+    }
+    console.error(err);
   }
 });
 
