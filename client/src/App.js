@@ -1,21 +1,38 @@
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-
+import { useState, useEffect } from "react";
 import Navbar from "./components/navbar";
-import register from "./pages/register";
-import login from "./pages/login";
-import posts from "./pages/posts";
-import admin from "./pages/admin";
+import Register from "./pages/register";
+import Login from "./pages/login";
+import Posts from "./pages/posts";
+import Admin from "./pages/admin";
 
 function App() {
+  const [isAuthed, setIsAuthed] = useState(false);
+  useEffect(() => {
+    const token =
+      localStorage.getItem("rebbitAuth") ||
+      sessionStorage.getItem("rebbitAuth");
+    if (token) {
+      setIsAuthed(true);
+    }
+  }, []);
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navbar isAuthed={isAuthed} setIsAuthed={setIsAuthed} />
       <Switch>
-        <Route path="/" exact component={posts}></Route>
-        <Route path="/register" exact component={register}></Route>
-        <Route path="/login" exact component={login}></Route>
-        <Route path="/admin" exact component={admin}></Route>
+        <Route path="/" exact component={Posts}></Route>
+        <Route
+          path="/register"
+          exact
+          render={(props) => <Register {...props} setIsAuthed={setIsAuthed} />}
+        ></Route>
+        <Route
+          path="/login"
+          exact
+          render={(props) => <Login {...props} setIsAuthed={setIsAuthed} />}
+        ></Route>
+        <Route path="/admin" exact component={Admin}></Route>
       </Switch>
     </BrowserRouter>
   );

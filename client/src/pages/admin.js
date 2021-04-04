@@ -9,6 +9,7 @@ const Admin = () => {
       "https://isa-rebbit-server.herokuapp.com/api/v1/admin"
     );
     const jsonData = await data.json();
+    jsonData.sort((a, b) => b.request - a.request);
     console.log(jsonData);
     setRequests(jsonData);
   };

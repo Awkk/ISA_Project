@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Container,
   Typography,
@@ -30,9 +30,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Register = () => {
+const Register = ({ history }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+
   const classes = useStyles();
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    try {
+      const response = await fetch(
+        "https://isa-rebbit-server.herokuapp.com/api/v1/user/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: username,
+            password: password,
+          }),
+        }
+      );
+      const responseJson = await response.json();
+      if (responseJson.error) {
+        setMessage(responseJson.error);
+      } else {
+        history.push("/login");
+      }
+      console.log(responseJson);
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -43,7 +75,12 @@ const Register = () => {
         <Typography component="h1" variant="h5">
           Register
         </Typography>
-        <form className={classes.form} noValidate>
+        {message ? (
+          <Typography color="secondary" variant="h6">
+            {message}
+          </Typography>
+        ) : null}
+        <form className={classes.form} onSubmit={onSubmit}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -53,6 +90,9 @@ const Register = () => {
             label="User Name"
             name="username"
             autoFocus
+            onChange={(e) => {
+              setUsername(e.target.value);
+            }}
           />
           <TextField
             variant="outlined"
@@ -64,6 +104,9 @@ const Register = () => {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           />
           <Button
             type="submit"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Container,
   Typography,
@@ -32,12 +32,43 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = () => {
+const Login = ({ setIsAuthed, history }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
+
   const classes = useStyles();
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    
+    try {
+      const response = await fetch(
+        "https://isa-rebbit-server.herokuapp.com/api/v1/user/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: username,
+            password: password,
+          }),
+        }
+      );
+      if (response.status === 200) {
+        const body = await response.json();
+        if (remember) {
+          localStorage.setItem("rebbitAuth", body.accessToken);
+        } else {
+          sessionStorage.setItem("rebbitAuth", body.accessToken);
+        }
+        setIsAuthed(true);
+        console.log(body);
+        history.push("/admin");
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -60,6 +91,9 @@ const Login = () => {
             label="User Name"
             name="username"
             autoFocus
+            onChange={(e) => {
+              setUsername(e.target.value);
+            }}
           />
           <TextField
             variant="outlined"
@@ -71,10 +105,17 @@ const Login = () => {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
+            checked={remember}
+            onChange={() => {
+              setRemember(!remember);
+            }}
           />
           <Button
             type="submit"

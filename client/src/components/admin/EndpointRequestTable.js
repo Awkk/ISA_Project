@@ -24,17 +24,17 @@ const EndPointRequestTable = ({ data }) => {
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="center">Method</TableCell>
-              <TableCell align="center">Endpoint</TableCell>
-              <TableCell align="center">Requests</TableCell>
+              <TableCell align="left">Method</TableCell>
+              <TableCell align="left">Endpoint</TableCell>
+              <TableCell align="left">Requests</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data.map((row) => (
               <TableRow key={row.api_id}>
-                <TableCell align="center">{row.method}</TableCell>
-                <TableCell align="center">{row.endpoint}</TableCell>
-                <TableCell align="center">{row.request}</TableCell>
+                <TableCell align="left">{row.method}</TableCell>
+                <TableCell align="left">{row.endpoint}</TableCell>
+                <TableCell align="left">{row.request}</TableCell>
               </TableRow>
             ))}
           </TableBody>
