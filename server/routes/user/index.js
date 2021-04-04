@@ -1,10 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const pool = require("../../dbconfig");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-require("dotenv").config();
 
 const SelectUserQuery = "SELECT * FROM users WHERE username=$1";
 const InsertUserQuery =
