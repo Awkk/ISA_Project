@@ -1,11 +1,23 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
+import EndPointRequestTable from "../components/admin/EndpointRequestTable";
 
-const admin = () => {
-    return (
-        <div>
-            admin
-        </div>
-    )
-}
+const Admin = () => {
+  const [requests, setRequests] = useState([]);
 
-export default admin
+  const fetchRequests = async () => {
+    const data = await fetch(
+      "https://isa-rebbit-server.herokuapp.com/api/v1/admin"
+    );
+    const jsonData = await data.json();
+    console.log(jsonData);
+    setRequests(jsonData);
+  };
+
+  useEffect(() => {
+    fetchRequests();
+  }, []);
+
+  return <EndPointRequestTable data={requests} />;
+};
+
+export default Admin;

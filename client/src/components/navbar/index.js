@@ -32,6 +32,9 @@ const Navbar = () => {
               <Typography variant="h4">Rebbit</Typography>
             </Button>
           </div>
+          <Button component={Link} to="/admin" variant="text">
+            Admin
+          </Button>
           <Button component={Link} to="/register" variant="text">
             Register
           </Button>
