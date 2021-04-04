@@ -19,7 +19,7 @@
     }
   ],
   "paths": {
-    "/user": {
+    "/user/register": {
       "post": {
         "tags": [
           "user"
@@ -45,8 +45,8 @@
           "200": {
             "description": "successful"
           },
-          "400": {
-            "description": "Unauthroized"
+          "401": {
+            "description": "Username not available"
           }
         }
       }
