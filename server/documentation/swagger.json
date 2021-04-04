@@ -1,0 +1,520 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Rebbit",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "kkwong125@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags": [
+    {
+      "name": "Rebbit",
+      "description": "A clone of simple Reddit"
+    }
+  ],
+  "paths": {
+    "/user": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "user",
+        "operationId": "addUser",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          },
+          "400": {
+            "description": "Unauthroized"
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Login user",
+        "operationId": "loginUser",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "The user name for login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "The password for login in clear text",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          },
+          "400": {
+            "description": "failed"
+          }
+        }
+      }
+    },
+    "/post": {
+      "post": {
+        "tags": [
+          "Post"
+        ],
+        "summary": "add post",
+        "description": "posting",
+        "operationId": "addPost",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful posted"
+          },
+          "400": {
+            "description": "Invalid to create Post"
+          }
+        }
+      }
+    },
+    "/post/{postId}": {
+      "get": {
+        "tags": [
+          "Post"
+        ],
+        "summary": "Find post by ID",
+        "description": "Returns a single post",
+        "operationId": "getPostById",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "description": "ID ofpost to return",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          },
+          "400": {
+            "description": "Invalid to get Post"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Post"
+        ],
+        "summary": "Updates a Post",
+        "operationId": "updatePost",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "description": "ID of post that needs to be updated",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful updated"
+          },
+          "405": {
+            "description": "failed to update"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Post"
+        ],
+        "summary": "Delete a Post",
+        "operationId": "deletePost",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "description": "ID of post that needs to be deleted",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful deleted"
+          },
+          "405": {
+            "description": "failed to delete"
+          }
+        }
+      }
+    },
+    "/post/vote/{postId}": {
+      "put": {
+        "tags": [
+          "Post"
+        ],
+        "summary": "Updates a Post vote",
+        "operationId": "updatePostVote",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "description": "ID of post that needs to be updated",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful updated the vote"
+          },
+          "405": {
+            "description": "failed to update the vote"
+          }
+        }
+      }
+    },
+    "/comment": {
+      "post": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "add comment",
+        "description": "adding comment",
+        "operationId": "addComment",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Comment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful created comment"
+          },
+          "400": {
+            "description": "failed to create comment"
+          }
+        }
+      }
+    },
+    "/comment/{commentId}": {
+      "get": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "add a comment",
+        "operationId": "getComment",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "description": "ID of comment",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful to get the comment"
+          },
+          "405": {
+            "description": "failed to get comment"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "update a comment",
+        "operationId": "updateComment",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "description": "ID of comment",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful updated"
+          },
+          "405": {
+            "description": "failed to update the comment"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "Delete a Comment",
+        "operationId": "deleteComment",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "description": "ID of post that needs to be deleted",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful deleted"
+          },
+          "405": {
+            "description": "failed to delete"
+          }
+        }
+      }
+    },
+    "/comment/vote/{commentId}": {
+      "put": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "update a vote comment",
+        "operationId": "getVoteComment",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "description": "ID of comment",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful updated"
+          },
+          "405": {
+            "description": "failed to update vote"
+          }
+        }
+      }
+    },
+    "/admin": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "add Admin",
+        "description": "adding Admin",
+        "operationId": "addAdmin",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          },
+          "400": {
+            "description": "failed"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "User"
+      }
+    },
+    "Post": {
+      "type": "object",
+      "properties": {
+        "postId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "author": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "vote": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "CreateDate": {
+          "type": "string"
+        },
+        "ModifyDate": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Post"
+      }
+    },
+    "Comment": {
+      "type": "object",
+      "properties": {
+        "commentId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "author": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "content": {
+          "type": "string"
+        },
+        "vote": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "CreateDate": {
+          "type": "string"
+        },
+        "ModifyDate": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Comment"
+      }
+    }
+  },
+  "host": "virtserver.swaggerhub.com",
+  "basePath": "/erickkkg7/ISA_PROJECT/1.0.0",
+  "schemes": [
+    "https",
+    "http"
+  ]
+}
