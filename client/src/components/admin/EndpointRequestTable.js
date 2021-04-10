@@ -9,12 +9,6 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Container } from "@material-ui/core";
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
-
 const EndPointRequestTable = ({ data }) => {
   const classes = useStyles();
 
@@ -43,5 +37,11 @@ const EndPointRequestTable = ({ data }) => {
     </TableContainer>
   );
 };
+
+const useStyles = makeStyles({
+  table: {
+    minWidth: 650,
+  },
+});
 
 export default EndPointRequestTable;

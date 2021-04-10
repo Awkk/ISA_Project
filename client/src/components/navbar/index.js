@@ -11,20 +11,27 @@ import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
+    flex: 1,
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
+  marginRight: {
     marginRight: 20,
   },
   route: {
-    flexGrow: 1,
+    flex: 1,
+    flexDirection: "row",
+  },
+  username: {
+    fontWeight: "bold",
+    marginRight: 20,
+    fontSize: 20,
   },
 }));
 
 const Navbar = ({ isAuthed, setIsAuthed }) => {
+  const user = JSON.parse(
+    localStorage.getItem("rebbitAuth") || sessionStorage.getItem("rebbitAuth")
+  );
+
   const classes = useStyles();
 
   const logout = () => {
@@ -36,19 +43,28 @@ const Navbar = ({ isAuthed, setIsAuthed }) => {
     <AppBar position="static" className={classes.root} color="default">
       <Container>
         <Toolbar>
-          <div className={classes.title}>
-            <Button component={Link} to="/">
+          <div className={classes.marginRight}>
+            <Button component={Link} to="/posts">
               <Typography variant="h4">Rebbit</Typography>
             </Button>
           </div>
           <div className={classes.route}>
+            <Button component={Link} to="/posts" variant="text">
+              Posts
+            </Button>
+
             <Button component={Link} to="/admin" variant="text">
               Admin
             </Button>
           </div>
           {!isAuthed ? (
             <>
-              <Button component={Link} to="/register" variant="text">
+              <Button
+                component={Link}
+                to="/register"
+                variant="text"
+                className={classes.marginRight}
+              >
                 Register
               </Button>
               <Button
@@ -61,14 +77,17 @@ const Navbar = ({ isAuthed, setIsAuthed }) => {
               </Button>
             </>
           ) : (
-            <Button
-              component={Link}
-              to="/register"
-              variant="text"
-              onClick={logout}
-            >
-              Logout
-            </Button>
+            <>
+              <div className={classes.username}>{user.username}</div>
+              <Button
+                component={Link}
+                to="/register"
+                variant="text"
+                onClick={logout}
+              >
+                Logout
+              </Button>
+            </>
           )}
         </Toolbar>
       </Container>

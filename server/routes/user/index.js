@@ -20,7 +20,21 @@ router.post("/register", async (req, res) => {
     } else {
       const hashedPw = await bcrypt.hash(password, saltRounds);
       const newUser = await pool.query(InsertUserQuery, [name, hashedPw]);
-      res.status(201).json({ username: newUser.rows[0].username });
+
+      const tokenContent = {
+        user_id: newUser.rows[0].user_id,
+        username: newUser.rows[0].username,
+      };
+      const accessToken = jwt.sign(
+        tokenContent,
+        process.env.ACCESS_TOKEN_SECRET
+      );
+
+      res.status(201).json({
+        user_id: newUser.rows[0].user_id,
+        username: newUser.rows[0].username,
+        accessToken: accessToken,
+      });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -51,7 +65,11 @@ router.post("/login", async (req, res) => {
           tokenContent,
           process.env.ACCESS_TOKEN_SECRET
         );
-        res.status(200).json({ accessToken: accessToken });
+        res.status(200).json({
+          user_id: user.rows[0].user_id,
+          username: user.rows[0].username,
+          accessToken: accessToken,
+        });
       }
     }
   } catch (err) {

@@ -7,7 +7,6 @@ const SelectAllEndpointRequest = "SELECT * FROM api";
 router.get("/", async (req, res) => {
   try {
     const requests = await pool.query(SelectAllEndpointRequest);
-
     res.status(200).json(requests.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });

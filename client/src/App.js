@@ -2,13 +2,14 @@ import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navbar from "./components/navbar";
-import Register from "./pages/register";
-import Login from "./pages/login";
-import Posts from "./pages/posts";
-import Admin from "./pages/admin";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import Posts from "./pages/Posts";
+import Admin from "./pages/Admin";
 
 function App() {
   const [isAuthed, setIsAuthed] = useState(false);
+
   useEffect(() => {
     const token =
       localStorage.getItem("rebbitAuth") ||
@@ -21,7 +22,7 @@ function App() {
     <BrowserRouter>
       <Navbar isAuthed={isAuthed} setIsAuthed={setIsAuthed} />
       <Switch>
-        <Route path="/" exact component={Posts}></Route>
+        <Route path="/posts" exact component={Posts}></Route>
         <Route
           path="/register"
           exact

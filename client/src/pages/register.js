@@ -9,29 +9,9 @@ import {
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { makeStyles } from "@material-ui/core/styles";
-import {baseurl} from "../constant/api"
+import { baseurl } from "../constant/api";
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
-const Register = ({ history }) => {
+const Register = ({ setIsAuthed, history }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -42,24 +22,25 @@ const Register = ({ history }) => {
     e.preventDefault();
     setMessage("");
     try {
-      const response = await fetch(
-        `${baseurl}/user/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: username,
-            password: password,
-          }),
-        }
-      );
+      const response = await fetch(`${baseurl}/user/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: username,
+          password: password,
+        }),
+      });
       const responseJson = await response.json();
-      if (responseJson.error) {
+      
+      if (response.status === 201) {
+        sessionStorage.setItem("rebbitAuth", JSON.stringify(responseJson));
+
+        setIsAuthed(true);
+        history.push("/admin");
+      } else if (responseJson.error) {
         setMessage(responseJson.error);
-      } else {
-        history.push("/login");
       }
       console.log(responseJson);
     } catch (err) {
@@ -123,5 +104,25 @@ const Register = ({ history }) => {
     </Container>
   );
 };
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
 
 export default Register;
