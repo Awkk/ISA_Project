@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { makeStyles } from "@material-ui/core/styles";
+import {baseurl} from "../constant/api"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -42,7 +43,7 @@ const Register = ({ history }) => {
     setMessage("");
     try {
       const response = await fetch(
-        "https://isa-rebbit-server.herokuapp.com/api/v1/user/register",
+        `${baseurl}/user/register`,
         {
           method: "POST",
           headers: {
