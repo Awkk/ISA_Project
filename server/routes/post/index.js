@@ -7,7 +7,7 @@ const GetAllPostQuery =
 const InsertPostQuery =
   "INSERT INTO post (user_id, title, content) VALUES ($1, $2, $3)";
 const GetPostByIdQuery =
-  "SELECT post_id, username, title, p.content, createdate, modifydate FROM post p LEFT JOIN users u ON p.user_id = u.user_id WHERE post_id = $1";
+  "SELECT post_id, p.user_id, username, title, p.content, createdate, modifydate FROM post p LEFT JOIN users u ON p.user_id = u.user_id WHERE post_id = $1";
 
 router.get("/", async (_, res) => {
   try {
@@ -40,8 +40,15 @@ router.get("/:postId", async (req, res) => {
   }
 });
 
-router.put("/:postId", (req, res) => {
-  res.send("post PUT route");
+router.put("/:postId", async (req, res) => {
+  try {
+    const { content } = req.body;
+    await pool.query(InsertPostQuery, [user_id, title, content]);
+    res.status(201).json({ message: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+    console.error(err);
+  }
 });
 
 router.put("/vote/:postId", (req, res) => {

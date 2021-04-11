@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "@material-ui/core";
+import { Container, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { baseurl } from "../constant/api";
 import PostListItem from "../components/posts/PostListItem";
@@ -33,7 +33,15 @@ const PostDetail = ({ match }) => {
   return (
     <Container className={classes.container}>
       <PostListItem post={post} />
-      <CommentList post_id={match.params.id} reload={reload}/>
+      {user.user_id === post.user_id ? (
+        <div className={classes.buttons}>
+          <Button variant="contained">Edit</Button>
+          <Button variant="contained" color="secondary">
+            Delete
+          </Button>
+        </div>
+      ) : null}
+      <CommentList user_id={user.user_id} post_id={match.params.id} reload={reload} setReload={setReload}/>
       <CommentInput user_id={user.user_id} post_id={match.params.id} setReload={setReload}/>
     </Container>
   );

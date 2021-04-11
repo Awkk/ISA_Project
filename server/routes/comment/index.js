@@ -6,7 +6,9 @@ const InsertCommentQuery =
   "INSERT INTO comment (post_id, user_id, content) VALUES ($1, $2, $3)  RETURNING *";
 const GetCommentByPostIdQuery =
   "SELECT comment_id, c.user_id, username, content, c.createdate, modifydate FROM comment c LEFT JOIN users u on c.user_id = u.user_id WHERE post_id = $1";
-
+const UpdateCommentQuery =
+  "UPDATE comment SET content = $1, modifydate = now() where comment_id = $2";
+const DeleteCommentQuery = "DELETE FROM comment where comment_id = $1;";
 router.post("/", async (req, res) => {
   try {
     const { user_id, post_id, content } = req.body;
@@ -35,16 +37,30 @@ router.get("/:postId", async (req, res) => {
   }
 });
 
-router.put("/:commentId", (req, res) => {
-  res.send("comment PUT route");
+router.put("/:commentId", async (req, res) => {
+  try {
+    const { content } = req.body;
+    await pool.query(UpdateCommentQuery, [content, req.params.commentId]);
+    res.status(200).json({ message: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+    console.error(err);
+  }
 });
 
-router.put("/vote/:commentId", (req, res) => {
+router.put("/vote/:commentId", async (req, res) => {
   res.send("comment/vote PUT route");
 });
 
-router.delete("/:commentId", (req, res) => {
-  res.send("comment Delete route");
+router.delete("/:commentId", async (req, res) => {
+  try {
+    const { content } = req.body;
+    await pool.query(DeleteCommentQuery, [req.params.commentId]);
+    res.status(202).json({ message: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+    console.error(err);
+  }
 });
 
 module.exports = router;

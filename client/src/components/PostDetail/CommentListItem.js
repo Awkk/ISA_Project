@@ -1,13 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { IconButton, Link } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { format } from "timeago.js";
+import { baseurl } from "../../constant/api";
 
-const CommentListItem = ({ comment }) => {
+const CommentListItem = ({ user_id, comment, setReload }) => {
+  const [editing, setEditing] = useState(false);
+  const [newContent, setNewContent] = useState(comment.content);
+
   const classes = useStyles();
+
+  const editComment = () => {
+    setEditing((editing) => !editing);
+  };
+  const updateComment = async () => {
+    try {
+      const response = await fetch(`${baseurl}/comment/${comment.comment_id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: newContent,
+        }),
+      });
+      const responseJson = await response.json();
+
+      if (response.status === 200) {
+        setReload((reload) => !reload);
+        setEditing((e) => !e);
+      } else if (responseJson.error) {
+        console.log(responseJson.error);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const deleteComment = async () => {
+    try {
+      const response = await fetch(`${baseurl}/comment/${comment.comment_id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const responseJson = await response.json();
+
+      if (response.status === 202) {
+        setReload((reload) => !reload);
+      } else if (responseJson.error) {
+        console.log(responseJson.error);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <Paper className={classes.container}>
       <div className={classes.horizontal}>
@@ -19,7 +70,33 @@ const CommentListItem = ({ comment }) => {
             : null}
         </div>
       </div>
-      <div className={classes.content}>{comment.content}</div>
+      {editing ? (
+        <textarea
+          value={newContent}
+          rows={4}
+          onChange={(e) => {
+            setNewContent(e.target.value);
+          }}
+        ></textarea>
+      ) : (
+        <div className={classes.content}>{comment.content}</div>
+      )}
+
+      {user_id === comment.user_id ? (
+        <div className={classes.buttons}>
+          {editing ? (
+            <Button variant="contained" color="primary" onClick={updateComment}>
+              Submit
+            </Button>
+          ) : null}
+          <Button variant="contained" onClick={editComment}>
+            {editing ? "cancel" : "edit"}
+          </Button>
+          <Button variant="contained" color="secondary" onClick={deleteComment}>
+            Delete
+          </Button>
+        </div>
+      ) : null}
     </Paper>
   );
 };
@@ -51,6 +128,11 @@ const useStyles = makeStyles((theme) => ({
   voteNumber: {
     fontSize: 20,
     textAlign: "center",
+  },
+  buttons: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: 20,
   },
 }));
 
