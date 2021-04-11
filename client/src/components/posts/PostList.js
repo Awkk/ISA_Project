@@ -18,7 +18,10 @@ const PostList = ({ reload, setReload }) => {
         },
       });
       const json = await response.json();
-      json.sort((a, b) => new Date(a.createdate) - new Date(b.createdate));
+      console.log(json);
+      if (json) {
+        json.sort((a, b) => new Date(a.createdate) - new Date(b.createdate));
+      }
       setPosts(json);
     };
     getAllPosts();

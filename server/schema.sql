@@ -27,18 +27,6 @@ CREATE TABLE PostComment(
 	comment_id INT references Comment(comment_id)
 );
 
-CREATE TABLE PostVote(
-	post_id INT references Post(post_id) NOT NULL,
-	user_id INT references users(user_id) NOT NULL,
-	vote INT NOT NULL,
-);
-
-CREATE TABLE CommentVote(
-	comment_id INT references Comment(comment_id) NOT NULL,
-	user_id INT references users(user_id) NOT NULL,
-	vote INT NOT NULL,
-);
-
 CREATE TABLE API(
 	API_id SERIAL PRIMARY KEY,
 	method VARCHAR NOT NULL,

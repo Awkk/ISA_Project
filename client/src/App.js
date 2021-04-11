@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/Navbar/Navbar";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Posts from "./pages/Posts";
@@ -53,6 +53,7 @@ function App() {
           <Route path="/post/:id" exact component={PostDetail} />
           <Route path="/posts" exact component={Posts} />
           <Route path="/admin" exact component={Admin} />
+          <Route path="/"  component={Admin} />
         </Switch>
       </BrowserRouter>
     </UserContext.Provider>

@@ -27,14 +27,47 @@
         "summary": "user",
         "operationId": "addUser",
         "produces": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "parameters": [
           {
             "in": "body",
             "name": "body",
-            "description": "Created user object",
+            "description": "Created user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful"
+          },
+          "409": {
+            "description": "Username not available"
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "user",
+        "operationId": "addUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Login user",
             "required": true,
             "schema": {
               "$ref": "#/definitions/User"
@@ -46,65 +79,52 @@
             "description": "successful"
           },
           "401": {
-            "description": "Username not available"
-          }
-        }
-      }
-    },
-    "/user/login": {
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Login user",
-        "operationId": "loginUser",
-        "produces": [
-          "application/json",
-          "application/xml"
-        ],
-        "parameters": [
-          {
-            "name": "username",
-            "in": "query",
-            "description": "The user name for login",
-            "required": true,
-            "type": "string"
+            "description": "username or password not correct"
           },
-          {
-            "name": "password",
-            "in": "query",
-            "description": "The password for login in clear text",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful"
-          },
-          "400": {
-            "description": "failed"
+          "500": {
+            "description": "Unexpected error"
           }
         }
       }
     },
     "/post": {
+      "get": {
+        "tags": [
+          "Post"
+        ],
+        "summary": "get all posts",
+        "description": "Return all posts",
+        "operationId": "getPostById",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          },
+          "401": {
+            "description": "unauthorized"
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        }
+      },
       "post": {
         "tags": [
           "Post"
         ],
-        "summary": "add post",
+        "summary": "create a post",
         "description": "posting",
         "operationId": "addPost",
         "produces": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "parameters": [
           {
             "in": "body",
             "name": "body",
-            "description": "Created user object",
+            "description": "Created a post",
             "required": true,
             "schema": {
               "$ref": "#/definitions/Post"
@@ -112,11 +132,14 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "successful posted"
+          "201": {
+            "description": "post created"
           },
-          "400": {
-            "description": "Invalid to create Post"
+          "401": {
+            "description": "unauthorized"
+          },
+          "500": {
+            "description": "Unexpected error"
           }
         }
       }
@@ -130,25 +153,17 @@
         "description": "Returns a single post",
         "operationId": "getPostById",
         "produces": [
-          "application/json",
-          "application/xml"
-        ],
-        "parameters": [
-          {
-            "name": "postId",
-            "in": "path",
-            "description": "ID ofpost to return",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
+          "application/json"
         ],
         "responses": {
           "200": {
             "description": "successful"
           },
-          "400": {
-            "description": "Invalid to get Post"
+          "401": {
+            "description": "unauthorized"
+          },
+          "500": {
+            "description": "Unexpected error"
           }
         }
       },
@@ -158,12 +173,8 @@
         ],
         "summary": "Updates a Post",
         "operationId": "updatePost",
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
         "produces": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "parameters": [
           {
@@ -173,14 +184,26 @@
             "required": true,
             "type": "integer",
             "format": "int64"
+          },
+          {
+            "name": "content",
+            "in": "body",
+            "description": "content of the new post",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "successful updated"
           },
-          "405": {
-            "description": "failed to update"
+          "401": {
+            "description": "unauthorized"
+          },
+          "500": {
+            "description": "Unexpected error"
           }
         }
       },
@@ -191,11 +214,10 @@
         "summary": "Delete a Post",
         "operationId": "deletePost",
         "consumes": [
-          "application/x-www-form-urlencoded"
+          "application/json"
         ],
         "produces": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "parameters": [
           {
@@ -208,11 +230,14 @@
           }
         ],
         "responses": {
-          "200": {
+          "202": {
             "description": "successful deleted"
           },
-          "405": {
-            "description": "failed to delete"
+          "401": {
+            "description": "unauthorized"
+          },
+          "500": {
+            "description": "Unexpected error"
           }
         }
       }
@@ -225,11 +250,10 @@
         "summary": "Updates a Post vote",
         "operationId": "updatePostVote",
         "consumes": [
-          "application/x-www-form-urlencoded"
+          "application/json"
         ],
         "produces": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "parameters": [
           {
@@ -245,8 +269,11 @@
           "200": {
             "description": "successful updated the vote"
           },
-          "405": {
-            "description": "failed to update the vote"
+          "401": {
+            "description": "unauthorized"
+          },
+          "500": {
+            "description": "Unexpected error"
           }
         }
       }
@@ -260,14 +287,13 @@
         "description": "adding comment",
         "operationId": "addComment",
         "produces": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "parameters": [
           {
             "in": "body",
             "name": "body",
-            "description": "Created user object",
+            "description": "Created comment",
             "required": true,
             "schema": {
               "$ref": "#/definitions/Comment"
@@ -275,11 +301,14 @@
           }
         ],
         "responses": {
-          "200": {
+          "201": {
             "description": "successful created comment"
           },
-          "400": {
-            "description": "failed to create comment"
+          "401": {
+            "description": "unauthorized"
+          },
+          "500": {
+            "description": "Unexpected error"
           }
         }
       }
@@ -292,8 +321,7 @@
         "summary": "add a comment",
         "operationId": "getComment",
         "produces": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "parameters": [
           {
@@ -309,8 +337,11 @@
           "200": {
             "description": "successful to get the comment"
           },
-          "405": {
-            "description": "failed to get comment"
+          "401": {
+            "description": "unauthorized"
+          },
+          "500": {
+            "description": "Unexpected error"
           }
         }
       },
@@ -321,8 +352,7 @@
         "summary": "update a comment",
         "operationId": "updateComment",
         "produces": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "parameters": [
           {
@@ -338,8 +368,11 @@
           "200": {
             "description": "successful updated"
           },
-          "405": {
-            "description": "failed to update the comment"
+          "401": {
+            "description": "unauthorized"
+          },
+          "500": {
+            "description": "Unexpected error"
           }
         }
       },
@@ -350,11 +383,10 @@
         "summary": "Delete a Comment",
         "operationId": "deleteComment",
         "consumes": [
-          "application/x-www-form-urlencoded"
+          "application/json"
         ],
         "produces": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "parameters": [
           {
@@ -367,11 +399,14 @@
           }
         ],
         "responses": {
-          "200": {
+          "202": {
             "description": "successful deleted"
           },
-          "405": {
-            "description": "failed to delete"
+          "401": {
+            "description": "unauthorized"
+          },
+          "500": {
+            "description": "Unexpected error"
           }
         }
       }
@@ -384,8 +419,7 @@
         "summary": "update a vote comment",
         "operationId": "getVoteComment",
         "produces": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "parameters": [
           {
@@ -398,11 +432,14 @@
           }
         ],
         "responses": {
-          "200": {
+          "202": {
             "description": "successful updated"
           },
-          "405": {
-            "description": "failed to update vote"
+          "401": {
+            "description": "unauthorized"
+          },
+          "500": {
+            "description": "Unexpected error"
           }
         }
       }
@@ -412,19 +449,21 @@
         "tags": [
           "Admin"
         ],
-        "summary": "add Admin",
-        "description": "adding Admin",
-        "operationId": "addAdmin",
+        "summary": "get api call record",
+        "description": "get api call record",
+        "operationId": "get api call record",
         "produces": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "responses": {
           "200": {
             "description": "successful"
           },
-          "400": {
-            "description": "failed"
+          "401": {
+            "description": "unauthorized"
+          },
+          "500": {
+            "description": "Unexpected error"
           }
         }
       }
@@ -438,7 +477,7 @@
           "type": "integer",
           "format": "int64"
         },
-        "username": {
+        "name": {
           "type": "string"
         },
         "password": {
@@ -456,7 +495,7 @@
           "type": "integer",
           "format": "int64"
         },
-        "author": {
+        "user_id": {
           "type": "integer",
           "format": "int64"
         },
