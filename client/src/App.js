@@ -1,10 +1,11 @@
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Navbar from "./components/navbar";
+import Navbar from "./components/Navbar";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Posts from "./pages/Posts";
+import PostDetail from "./pages/PostDetail";
 import Admin from "./pages/Admin";
 
 function App() {
@@ -22,18 +23,19 @@ function App() {
     <BrowserRouter>
       <Navbar isAuthed={isAuthed} setIsAuthed={setIsAuthed} />
       <Switch>
-        <Route path="/posts" exact component={Posts}></Route>
         <Route
           path="/register"
           exact
           render={(props) => <Register {...props} setIsAuthed={setIsAuthed} />}
-        ></Route>
+        />
         <Route
           path="/login"
           exact
           render={(props) => <Login {...props} setIsAuthed={setIsAuthed} />}
-        ></Route>
-        <Route path="/admin" exact component={Admin}></Route>
+        />
+        <Route path="/post/:id" exact component={PostDetail} />
+        <Route path="/posts" exact component={Posts} />
+        <Route path="/admin" exact component={Admin} />
       </Switch>
     </BrowserRouter>
   );

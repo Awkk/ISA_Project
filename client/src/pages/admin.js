@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import EndPointRequestTable from "../components/admin/EndpointRequestTable";
+import EndPointRequestTable from "../components/Admin/EndpointRequestTable";
 import {baseurl} from "../constant/api"
 
 const Admin = () => {

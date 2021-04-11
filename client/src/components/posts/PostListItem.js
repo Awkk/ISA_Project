@@ -3,11 +3,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { IconButton } from "@material-ui/core";
+import { IconButton, Link } from "@material-ui/core";
+import { Link as RouterLink } from "react-router-dom";
 import { format } from "timeago.js";
 
 const PostListItem = ({ post }) => {
   const classes = useStyles();
+
+  const detailurl = `/post/${post.post_id}`;
 
   return (
     <Paper className={classes.container}>
@@ -21,14 +24,21 @@ const PostListItem = ({ post }) => {
         </IconButton>
       </div>
       <div className={classes.body}>
-        <div className={classes.title}>{post.title}</div>
-        <div>{post.username}</div>
-        <div>
-          {format(post.createdate)}
-          {post.modifydate !== post.createdate
-            ? ` (${format(post.modifydate)})`
-            : null}
+        <Link variant="h6" component={RouterLink} to={detailurl}>
+          {post.title ?? ""}
+        </Link>
+        <div className={classes.horizontal}>
+          <div className={classes.username}>{post.username}</div>
+          <div className={classes.time}>
+            {format(post.createdate)}
+            {post.modifydate !== post.createdate
+              ? ` (${format(post.modifydate)})`
+              : null}
+          </div>
         </div>
+        {post.content ? (
+          <div className={classes.content}>{post.content}</div>
+        ) : null}
       </div>
     </Paper>
   );
@@ -49,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   body: {
-    margin: 15,
+    margin: 10,
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-around",
@@ -57,6 +67,19 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  username: {
+    fontSize: 15,
+    fontWeight: "bold",
+    marginRight: 10,
+  },
+  time: { fontSize: 15 },
+  content: {
+    marginTop: 30,
+  },
+  horizontal: {
+    display: "flex",
+    flexDirection: "row",
   },
 }));
 

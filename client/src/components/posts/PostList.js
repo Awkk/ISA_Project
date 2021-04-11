@@ -1,6 +1,6 @@
 import { Container } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 import { baseurl } from "../../constant/api";
 import PostListItem from "./PostListItem";
 
@@ -29,10 +29,10 @@ const PostList = () => {
 };
 
 const useStyles = makeStyles((theme) => ({
-    container: {
-      flexGrow: 1,
-    },
-  }));
-
+  container: {
+    flexGrow: 1,
+    marginTop: 20,
+  },
+}));
 
 export default PostList;

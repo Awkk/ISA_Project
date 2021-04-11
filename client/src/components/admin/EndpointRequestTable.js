@@ -13,8 +13,8 @@ const EndPointRequestTable = ({ data }) => {
   const classes = useStyles();
 
   return (
-    <TableContainer component={Paper}>
-      <Container>
+    <Container className={classes.container}>
+      <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -33,12 +33,15 @@ const EndPointRequestTable = ({ data }) => {
             ))}
           </TableBody>
         </Table>
-      </Container>
-    </TableContainer>
+      </TableContainer>
+    </Container>
   );
 };
 
 const useStyles = makeStyles({
+  container: {
+    marginTop: 20,
+  },
   table: {
     minWidth: 650,
   },
