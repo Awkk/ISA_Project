@@ -9,7 +9,7 @@ const Posts = () => {
   const classes = useStyles();
   return (
     <Container className={classes.container}>
-      <PostList reload={reload}></PostList>
+      <PostList reload={reload} setReload={setReload}></PostList>
       <PostInput setReload={setReload}></PostInput>
     </Container>
   );

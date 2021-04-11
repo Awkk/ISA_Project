@@ -4,7 +4,7 @@ import { baseurl } from "../../constant/api";
 import PostListItem from "./PostListItem";
 import { UserContext } from "../../context/UserContext";
 
-const PostList = ({ reload }) => {
+const PostList = ({ reload, setReload }) => {
   const [posts, setPosts] = useState([]);
   const user = useContext(UserContext);
 
@@ -18,7 +18,7 @@ const PostList = ({ reload }) => {
         },
       });
       const json = await response.json();
-      console.log("posts", json);
+      json.sort((a, b) => new Date(a.createdate) - new Date(b.createdate));
       setPosts(json);
     };
     getAllPosts();
@@ -27,7 +27,11 @@ const PostList = ({ reload }) => {
   return (
     <div className={classes.container}>
       {posts.map((post) => (
-        <PostListItem key={post.post_id} post={post}></PostListItem>
+        <PostListItem
+          key={post.post_id}
+          post={post}
+          setReload={setReload}
+        ></PostListItem>
       ))}
     </div>
   );

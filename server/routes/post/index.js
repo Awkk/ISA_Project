@@ -3,15 +3,17 @@ const router = express.Router();
 const pool = require("../../dbconfig");
 
 const GetAllPostQuery =
-  "SELECT post_id, username, title, createdate, modifydate FROM post p LEFT JOIN users u ON p.user_id = u.user_id";
+  "SELECT post_id, username, title, vote, createdate, modifydate FROM post p LEFT JOIN users u ON p.user_id = u.user_id";
 const InsertPostQuery =
   "INSERT INTO post (user_id, title, content) VALUES ($1, $2, $3)";
 const GetPostByIdQuery =
-  "SELECT post_id, p.user_id, username, title, p.content, createdate, modifydate FROM post p LEFT JOIN users u ON p.user_id = u.user_id WHERE post_id = $1";
+  "SELECT post_id, p.user_id, username, title, vote, p.content, createdate, modifydate FROM post p LEFT JOIN users u ON p.user_id = u.user_id WHERE post_id = $1";
 const UpdatePostQuery =
   "UPDATE post SET content = $1, modifydate = now() where post_id = $2";
 const DeletePostQuery = "DELETE FROM post where post_id = $1";
 const DeleteRelatedCommentsQuery = "DELETE FROM comment where post_id = $1";
+const GetCurrentVoteQuery = "SELECT vote FROM post where post_id = $1";
+const UpdateVoteQuery = "UPDATE post SET vote = $1 WHERE post_id= $2";
 
 router.get("/", async (_, res) => {
   try {
@@ -56,7 +58,20 @@ router.put("/:postId", async (req, res) => {
 });
 
 router.put("/vote/:postId", async (req, res) => {
-  res.send("post/vote PUT route");
+  try {
+    const { user_id, value } = req.body;
+    const currentVote = await pool.query(GetCurrentVoteQuery, [
+      req.params.postId,
+    ]);
+    await pool.query(UpdateVoteQuery, [
+      currentVote.rows[0].vote + value,
+      req.params.postId,
+    ]);
+    res.status(202).json({ message: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+    console.error(err);
+  }
 });
 
 router.delete("/:postId", async (req, res) => {

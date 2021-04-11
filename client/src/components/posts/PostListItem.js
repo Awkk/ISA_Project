@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
@@ -6,20 +6,58 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { IconButton, Link } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 import { format } from "timeago.js";
+import { UserContext } from "../../context/UserContext";
+import { baseurl } from "../../constant/api";
 
-const PostListItem = ({ post }) => {
+const PostListItem = ({ post, setReload }) => {
+  const user = useContext(UserContext);
   const classes = useStyles();
 
   const detailurl = `/post/${post.post_id}`;
 
+  const vote = async (num) => {
+    try {
+      const response = await fetch(`${baseurl}/post/vote/${post.post_id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + user.accessToken,
+        },
+        body: JSON.stringify({
+          user_id: user.user_id,
+          value: num,
+        }),
+      });
+      const responseJson = await response.json();
+
+      if (response.status === 202) {
+        setReload((reload) => !reload);
+      } else if (responseJson.error) {
+        console.log(responseJson.error);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <Paper className={classes.container}>
       <div className={classes.voteSection}>
-        <IconButton color="primary" aria-label="upvote" component="span">
+        <IconButton
+          color="primary"
+          aria-label="upvote"
+          component="span"
+          onClick={() => vote(1)}
+        >
           <ExpandLessIcon />
         </IconButton>
-        <div className={classes.voteNumber}>0</div>
-        <IconButton color="primary" aria-label="downvote" component="span">
+        <div className={classes.voteNumber}>{post.vote}</div>
+        <IconButton
+          color="primary"
+          aria-label="downvote"
+          component="span"
+          onClick={() => vote(-1)}
+        >
           <ExpandMoreIcon />
         </IconButton>
       </div>

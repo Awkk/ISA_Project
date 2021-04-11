@@ -5,10 +5,12 @@ const pool = require("../../dbconfig");
 const InsertCommentQuery =
   "INSERT INTO comment (post_id, user_id, content) VALUES ($1, $2, $3)  RETURNING *";
 const GetCommentByPostIdQuery =
-  "SELECT comment_id, c.user_id, username, content, c.createdate, modifydate FROM comment c LEFT JOIN users u on c.user_id = u.user_id WHERE post_id = $1";
+  "SELECT comment_id, c.user_id, username, content, vote, c.createdate, modifydate FROM comment c LEFT JOIN users u on c.user_id = u.user_id WHERE post_id = $1";
 const UpdateCommentQuery =
   "UPDATE comment SET content = $1, modifydate = now() where comment_id = $2";
 const DeleteCommentQuery = "DELETE FROM comment where comment_id = $1";
+const GetCurrentVoteQuery = "SELECT vote FROM comment where comment_id = $1";
+const UpdateVoteQuery = "UPDATE comment SET vote = $1 WHERE comment_id= $2";
 
 router.post("/", async (req, res) => {
   try {
@@ -50,7 +52,20 @@ router.put("/:commentId", async (req, res) => {
 });
 
 router.put("/vote/:commentId", async (req, res) => {
-  res.send("comment/vote PUT route");
+  try {
+    const { user_id, value } = req.body;
+    const currentVote = await pool.query(GetCurrentVoteQuery, [
+      req.params.commentId,
+    ]);
+    await pool.query(UpdateVoteQuery, [
+      currentVote.rows[0].vote + value,
+      req.params.commentId,
+    ]);
+    res.status(202).json({ message: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+    console.error(err);
+  }
 });
 
 router.delete("/:commentId", async (req, res) => {

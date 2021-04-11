@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { Button } from "@material-ui/core";
+import { Button, IconButton } from "@material-ui/core";
 import { format } from "timeago.js";
 import { baseurl } from "../../constant/api";
 import { UserContext } from "../../context/UserContext";
@@ -63,44 +63,101 @@ const CommentListItem = ({ user_id, comment, setReload }) => {
     }
   };
 
+  const vote = async (num) => {
+    try {
+      const response = await fetch(
+        `${baseurl}/comment/vote/${comment.comment_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + user.accessToken,
+          },
+          body: JSON.stringify({
+            user_id: user.user_id,
+            value: num,
+          }),
+        }
+      );
+      const responseJson = await response.json();
+
+      if (response.status === 202) {
+        setReload((reload) => !reload);
+      } else if (responseJson.error) {
+        console.log(responseJson.error);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <Paper className={classes.container}>
-      <div className={classes.horizontal}>
-        <div className={classes.username}>{comment.username}</div>
-        <div className={classes.time}>
-          {format(comment.createdate)}
-          {comment.modifydate !== comment.createdate
-            ? ` (${format(comment.modifydate)})`
-            : null}
-        </div>
+      <div className={classes.voteSection}>
+        <IconButton
+          color="primary"
+          aria-label="upvote"
+          component="span"
+          onClick={() => vote(1)}
+        >
+          <ExpandLessIcon />
+        </IconButton>
+        <div className={classes.voteNumber}>{comment.vote}</div>
+        <IconButton
+          color="primary"
+          aria-label="downvote"
+          component="span"
+          onClick={() => vote(-1)}
+        >
+          <ExpandMoreIcon />
+        </IconButton>
       </div>
-      {editing ? (
-        <textarea
-          value={newContent}
-          rows={4}
-          onChange={(e) => {
-            setNewContent(e.target.value);
-          }}
-        ></textarea>
-      ) : (
-        <div className={classes.content}>{comment.content}</div>
-      )}
-
-      {user_id === comment.user_id ? (
-        <div className={classes.buttons}>
-          {editing ? (
-            <Button variant="contained" color="primary" onClick={updateComment}>
-              Submit
-            </Button>
-          ) : null}
-          <Button variant="contained" onClick={editComment}>
-            {editing ? "cancel" : "edit"}
-          </Button>
-          <Button variant="contained" color="secondary" onClick={deleteComment}>
-            Delete
-          </Button>
+      <div>
+        <div className={classes.horizontal}>
+          <div className={classes.username}>{comment.username}</div>
+          <div className={classes.time}>
+            {format(comment.createdate)}
+            {comment.modifydate !== comment.createdate
+              ? ` (${format(comment.modifydate)})`
+              : null}
+          </div>
         </div>
-      ) : null}
+        {editing ? (
+          <textarea
+            value={newContent}
+            rows={4}
+            onChange={(e) => {
+              setNewContent(e.target.value);
+            }}
+          ></textarea>
+        ) : (
+          <div className={classes.content}>{comment.content}</div>
+        )}
+
+        {user_id === comment.user_id ? (
+          <div className={classes.buttons}>
+            {editing ? (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={updateComment}
+              >
+                Submit
+              </Button>
+            ) : null}
+            <Button variant="contained" onClick={editComment}>
+              {editing ? "cancel" : "edit"}
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={deleteComment}
+            >
+              Delete
+            </Button>
+          </div>
+        ) : null}
+      </div>
     </Paper>
   );
 };
@@ -109,9 +166,10 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flexGrow: 1,
     marginTop: 5,
-    padding: 15,
+    paddingTop: 10,
+    paddingBottom: 10,
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "row",
   },
   horizontal: {
     display: "flex",
@@ -128,7 +186,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 10,
   },
   voteSection: {
-    marginLeft: 5,
+    marginRight: 5,
   },
   voteNumber: {
     fontSize: 20,
