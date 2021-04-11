@@ -1,30 +1,35 @@
-import { Container } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { baseurl } from "../../constant/api";
 import PostListItem from "./PostListItem";
+import { UserContext } from "../../context/UserContext";
 
-const PostList = () => {
+const PostList = ({ reload }) => {
   const [posts, setPosts] = useState([]);
+  const user = useContext(UserContext);
 
   const classes = useStyles();
 
   useEffect(() => {
     const getAllPosts = async () => {
-      const response = await fetch(`${baseurl}/post`);
+      const response = await fetch(`${baseurl}/post`, {
+        headers: {
+          Authorization: "Bearer " + user.accessToken,
+        },
+      });
       const json = await response.json();
-      console.log(json);
+      console.log("posts", json);
       setPosts(json);
     };
     getAllPosts();
-  }, []);
+  }, [user.accessToken, reload]);
 
   return (
-    <Container className={classes.container}>
+    <div className={classes.container}>
       {posts.map((post) => (
         <PostListItem key={post.post_id} post={post}></PostListItem>
       ))}
-    </Container>
+    </div>
   );
 };
 

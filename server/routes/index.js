@@ -8,8 +8,8 @@ router.use("/documentation", swaggerUi.serve);
 router.get("/documentation", swaggerUi.setup(swaggerDocument));
 
 router.use("/user", require("./user"));
-router.use("/post", require("./post"));
-router.use("/comment", require("./comment"));
-router.use("/admin", require("./admin"));
+router.use("/post", checkJwt, require("./post"));
+router.use("/comment", checkJwt, require("./comment"));
+router.use("/admin", checkJwt, require("./admin"));
 
 module.exports = router;

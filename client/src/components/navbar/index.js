@@ -81,7 +81,7 @@ const Navbar = ({ isAuthed, setIsAuthed }) => {
               <div className={classes.username}>{user.username}</div>
               <Button
                 component={Link}
-                to="/register"
+                to="/login"
                 variant="text"
                 onClick={logout}
               >

@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import PostList from "../components/posts/PostList";
+import PostList from "../components/Posts/PostList";
+import PostInput from "../components/Posts/PostInput";
 
 const Posts = () => {
+  const [reload, setReload] = useState(false);
   const classes = useStyles();
   return (
     <Container className={classes.container}>
-      <PostList></PostList>
+      <PostList reload={reload}></PostList>
+      <PostInput setReload={setReload}></PostInput>
     </Container>
   );
 };

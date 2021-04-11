@@ -4,28 +4,28 @@ import { makeStyles } from "@material-ui/core/styles";
 import { baseurl } from "../../constant/api";
 import { UserContext } from "../../context/UserContext";
 
-const CommentInput = ({ user_id, post_id, setReload }) => {
-  const [comment, setComment] = useState("");
+const PostInput = ({ setReload }) => {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const user = useContext(UserContext);
 
   const classes = useStyles();
 
-  const submitComment = async (e) => {
-    if (comment) {
+  const submitPost = async (e) => {
+    if (content) {
       e.preventDefault();
-      console.log("user_id", user_id);
 
       try {
-        const response = await fetch(`${baseurl}/comment`, {
+        const response = await fetch(`${baseurl}/post`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + user.accessToken,
           },
           body: JSON.stringify({
-            user_id: user_id,
-            post_id: post_id,
-            content: comment,
+            user_id: user.user_id,
+            title: title,
+            content: content,
           }),
         });
         const responseJson = await response.json();
@@ -33,7 +33,8 @@ const CommentInput = ({ user_id, post_id, setReload }) => {
         if (response.status === 201) {
           console.log(responseJson);
           setReload((reload) => !reload);
-          setComment("");
+          setTitle("");
+          setContent("");
         } else if (responseJson.error) {
           console.log(responseJson.error);
         }
@@ -47,22 +48,32 @@ const CommentInput = ({ user_id, post_id, setReload }) => {
     <Paper>
       <form className={classes.container}>
         <TextField
+          id="standard-basic"
+          label="Title"
+          variant="outlined"
+          value={title}
+          required
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
+        />
+        <TextField
           className={classes.textField}
           label="New Comment"
           multiline
           rows={6}
           variant="outlined"
-          value={comment}
+          value={content}
           required
           onChange={(e) => {
-            setComment(e.target.value);
+            setContent(e.target.value);
           }}
         />
         <Button
           type="submit"
           color="primary"
           variant="contained"
-          onClick={submitComment}
+          onClick={submitPost}
         >
           Submit
         </Button>
@@ -84,4 +95,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default CommentInput;
+export default PostInput;

@@ -1,48 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { Container, Button } from "@material-ui/core";
+import React, { useContext, useState } from "react";
+import { Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { baseurl } from "../constant/api";
-import PostListItem from "../components/posts/PostListItem";
+import PostContent from "../components/PostDetail/PostContent";
 import CommentList from "../components/PostDetail/CommentList";
 import CommentInput from "../components/PostDetail/CommentInput";
+import { UserContext } from "../context/UserContext";
 
 const PostDetail = ({ match }) => {
-  const [post, setPost] = useState({});
-  const [user, setUser] = useState({});
   const [reload, setReload] = useState(false);
+  const user = useContext(UserContext);
 
   const classes = useStyles();
 
-  useEffect(() => {
-    const userStorage =
-      localStorage.getItem("rebbitAuth") ||
-      sessionStorage.getItem("rebbitAuth");
-    setUser(JSON.parse(userStorage));
-  }, []);
-
-  useEffect(() => {
-    const getPost = async () => {
-      const response = await fetch(`${baseurl}/post/${match.params.id}`);
-      const json = await response.json();
-      console.log(json);
-      setPost(json);
-    };
-    getPost();
-  }, []);
-
   return (
     <Container className={classes.container}>
-      <PostListItem post={post} />
-      {user.user_id === post.user_id ? (
-        <div className={classes.buttons}>
-          <Button variant="contained">Edit</Button>
-          <Button variant="contained" color="secondary">
-            Delete
-          </Button>
-        </div>
-      ) : null}
-      <CommentList user_id={user.user_id} post_id={match.params.id} reload={reload} setReload={setReload}/>
-      <CommentInput user_id={user.user_id} post_id={match.params.id} setReload={setReload}/>
+      <PostContent
+        user_id={user.user_id}
+        post_id={match.params.id}
+        reload={reload}
+        setReload={setReload}
+      />
+      <CommentList
+        user_id={user.user_id}
+        post_id={match.params.id}
+        reload={reload}
+        setReload={setReload}
+      />
+      <CommentInput
+        user_id={user.user_id}
+        post_id={match.params.id}
+        setReload={setReload}
+      />
     </Container>
   );
 };

@@ -27,18 +27,13 @@ const PostListItem = ({ post }) => {
         <Link variant="h6" component={RouterLink} to={detailurl}>
           {post.title ?? ""}
         </Link>
-        <div className={classes.horizontal}>
-          <div className={classes.username}>{post.username}</div>
-          <div className={classes.time}>
-            {format(post.createdate)}
-            {post.modifydate !== post.createdate
-              ? ` (${format(post.modifydate)})`
-              : null}
-          </div>
+        <div className={classes.username}>{post.username}</div>
+        <div className={classes.time}>
+          {format(post.createdate)}
+          {post.modifydate !== post.createdate
+            ? ` (${format(post.modifydate)})`
+            : null}
         </div>
-        {post.content ? (
-          <div className={classes.content}>{post.content}</div>
-        ) : null}
       </div>
     </Paper>
   );
@@ -59,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   body: {
-    margin: 10,
+    margin: 15,
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-around",
@@ -74,13 +69,6 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 10,
   },
   time: { fontSize: 15 },
-  content: {
-    marginTop: 30,
-  },
-  horizontal: {
-    display: "flex",
-    flexDirection: "row",
-  },
 }));
 
 export default PostListItem;

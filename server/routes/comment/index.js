@@ -8,7 +8,8 @@ const GetCommentByPostIdQuery =
   "SELECT comment_id, c.user_id, username, content, c.createdate, modifydate FROM comment c LEFT JOIN users u on c.user_id = u.user_id WHERE post_id = $1";
 const UpdateCommentQuery =
   "UPDATE comment SET content = $1, modifydate = now() where comment_id = $2";
-const DeleteCommentQuery = "DELETE FROM comment where comment_id = $1;";
+const DeleteCommentQuery = "DELETE FROM comment where comment_id = $1";
+
 router.post("/", async (req, res) => {
   try {
     const { user_id, post_id, content } = req.body;
@@ -54,7 +55,6 @@ router.put("/vote/:commentId", async (req, res) => {
 
 router.delete("/:commentId", async (req, res) => {
   try {
-    const { content } = req.body;
     await pool.query(DeleteCommentQuery, [req.params.commentId]);
     res.status(202).json({ message: "success" });
   } catch (err) {

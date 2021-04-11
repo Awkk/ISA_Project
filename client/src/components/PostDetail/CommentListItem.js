@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
@@ -6,10 +6,12 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { Button } from "@material-ui/core";
 import { format } from "timeago.js";
 import { baseurl } from "../../constant/api";
+import { UserContext } from "../../context/UserContext";
 
 const CommentListItem = ({ user_id, comment, setReload }) => {
   const [editing, setEditing] = useState(false);
   const [newContent, setNewContent] = useState(comment.content);
+  const user = useContext(UserContext);
 
   const classes = useStyles();
 
@@ -22,6 +24,7 @@ const CommentListItem = ({ user_id, comment, setReload }) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + user.accessToken,
         },
         body: JSON.stringify({
           content: newContent,
@@ -45,6 +48,7 @@ const CommentListItem = ({ user_id, comment, setReload }) => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + user.accessToken,
         },
       });
       const responseJson = await response.json();
@@ -112,6 +116,7 @@ const useStyles = makeStyles((theme) => ({
   horizontal: {
     display: "flex",
     flexDirection: "row",
+    justifyContent: "space-between",
   },
   username: {
     fontSize: 15,
